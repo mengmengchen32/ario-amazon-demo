@@ -92,7 +92,7 @@
     /* ── FULL-WIDTH NARRATIVE SCREENS ── */
     .screen-narrative {
       background: var(--parchment-light);
-      align-items: center;
+      align-items: flex-start;
       justify-content: center;
       overflow: hidden;
     }
@@ -270,7 +270,7 @@
     .browser-url-text { overflow: hidden; text-overflow: ellipsis; }
     .browser-body {
       overflow: hidden;
-      height: 520px;
+      height: 580px;
     }
 
     .card {
@@ -1019,7 +1019,30 @@
       opacity: 0.3; cursor: default; pointer-events: none;
     }
     .step-nav-btn svg { width: 22px; height: 22px; }
+
+    /* ── SIMULATION LINK ── */
+    .sim-link-wrap {
+      text-align: center;
+      margin-top: 14px;
+    }
+    .sim-link {
+      font-size: 13px;
+      color: var(--ink-faint);
+      text-decoration: none;
+      letter-spacing: 0.01em;
+      transition: color 0.2s;
+    }
+    .sim-link:hover {
+      color: var(--ink-muted);
+      text-decoration: underline;
+    }
     #navPrev { left: 32px; }
+    #navPrev.narrative-pos {
+      bottom: auto;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+    #navPrev.narrative-pos:hover { transform: translateY(-50%) scale(1.05); }
     #navNext {
       right: 32px;
       bottom: auto;
@@ -1051,7 +1074,7 @@
     }
     .tutorial-dim.visible { opacity: 1; visibility: visible; }
     .tutorial-prompt {
-      position: fixed; z-index: 32; bottom: 80px;
+      position: fixed; z-index: 32; bottom: 70px;
       background: #fff; border-radius: 10px; padding: 14px 24px;
       box-shadow: 0 4px 24px rgba(0,0,0,0.15);
       display: flex; align-items: center; gap: 10px;
@@ -1175,7 +1198,7 @@
 <!-- SCREEN 0: INTRO OVERLAY                -->
 <!-- ═══════════════════════════════════════ -->
 <div class="intro-overlay" id="introOverlay">
-  <div class="intro-stamp">
+  <div class="intro-stamp" style="display:none;">
     <span class="intro-stamp-text">Live</span>
     <div class="intro-stamp-line"></div>
     <span class="intro-stamp-text">Demo</span>
@@ -1201,14 +1224,24 @@
 <div class="screen screen-narrative" id="screen-narrative" style="display:none;opacity:0;">
   <div class="narrative-inner" style="display:flex;gap:48px;align-items:flex-start;padding-top:10vh;">
     <div style="flex:1;min-width:400px;">
-      <div class="narrative-eyebrow">The scenario</div>
-      <div class="narrative-title">Setting the stage</div>
+      <div class="narrative-eyebrow" id="narrativeEyebrow">The scenario</div>
+      <div class="narrative-title" id="narrativeTitle">Setting the stage</div>
       <ul class="narrative-bullets">
-        <li>Circuit Shack sends a promotional email offering $25 store credit for linking an Amazon account</li>
-        <li>Customer clicks through and accepts the offer</li>
+        <li id="narrativeBullet1">Circuit Shack sends a promotional email offering $25 store credit for sharing electronics purchases from Amazon over the past year</li>
+        <li id="narrativeBullet2">Customer clicks through and accepts the offer</li>
+        <li id="narrativeBullet3" style="display:none;"></li>
       </ul>
     </div>
-    <div style="flex:0 0 480px;" id="narrativeBrowserWrap">
+    <div style="flex:0 0 480px;" id="narrativeImageWrap">
+      <img
+        id="narrativeImage"
+        src="cs.webp"
+        alt="Consent preview"
+        style="width:100%;object-fit:contain;display:block;"
+      />
+    </div>
+
+    <div style="flex:0 0 480px;display:none;" id="narrativeBrowserWrap">
       <div class="browser">
         <div class="browser-toolbar">
           <div class="browser-dots"><span class="browser-dot r"></span><span class="browser-dot y"></span><span class="browser-dot g"></span></div>
@@ -1270,8 +1303,8 @@
                   <div class="email-promo-amount">$25</div>
                   <div class="email-promo-divider"></div>
                   <div class="email-promo-label">STORE CREDIT</div>
-                  <div class="email-promo-sub">WHEN YOU LINK YOUR AMAZON ACCOUNT</div>
-                  <div class="email-promo-text">Share with us the tech you've purchased on Amazon, and we will send you a $25 reward to spend at Circuit Shack!</div>
+                  <div class="email-promo-sub">WHEN YOU SHARE YOUR AMAZON E-RECEIPTS</div>
+                  <div class="email-promo-text">Share with us your Amazon electronics purchases from last year, and we will send you a $25 reward to spend at Circuit Shack!</div>
                   <button class="email-promo-cta" id="emailCta">Link Now</button>
                 </div>
                 <div class="email-promo-footer">
@@ -1339,226 +1372,27 @@
           <div class="browser-dots"><span class="browser-dot r"></span><span class="browser-dot y"></span><span class="browser-dot g"></span></div>
           <div class="browser-url">
             <span class="browser-url-lock"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 7V5a3 3 0 116 0v2"/><rect x="3" y="7" width="10" height="7" rx="1.5"/></svg></span>
-            <span class="browser-url-text">circuitshack.com/link-account</span>
+            <span class="browser-url-text">electronics.ariodata.com/</span>
           </div>
         </div>
         <div class="browser-body">
-          <div class="link-page">
-            <div class="link-page-brand">
-              <div class="store-icon" style="width:40px;height:40px;border-radius:10px;">
-                <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:20px;height:20px;"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
-              </div>
-              <span class="link-page-brand-name">circuit shack</span>
-            </div>
-            <div class="link-page-title">Link Your Account</div>
-            <div class="link-page-desc">Get $25 store credit and exclusive personalized perks at Circuit Shack when you link your Amazon Account!</div>
-            <div class="link-page-card">
-              <div class="link-page-amazon">
-                <svg viewBox="0 0 120 36" fill="none" xmlns="http://www.w3.org/2000/svg" style="height:30px;">
-                  <text x="10" y="26" font-family="'Outfit', sans-serif" font-weight="800" font-size="28" fill="#232F3E">amazon</text>
-                  <path d="M30 30 Q50 36 82 30" stroke="#FF9900" stroke-width="2.5" fill="none" stroke-linecap="round"/>
-                  <path d="M80 28 L82 30 L78 30" fill="#FF9900"/>
-                </svg>
-              </div>
-              <div class="link-page-options">
-                <label class="link-page-radio selected" onclick="selectRegion(this)">
-                  <span class="radio-circle checked"></span>
-                  Amazon US
-                </label>
-                <label class="link-page-radio" onclick="selectRegion(this)">
-                  <span class="radio-circle"></span>
-                  Amazon CA
-                </label>
-              </div>
-              <button class="link-page-connect" onclick="goToStep(2)">Connect</button>
-            </div>
-            <div class="link-page-trust">
-              <strong>Secured by Ario.</strong> By linking your account, you agree to our <a href="#">Privacy Policy</a>
-            </div>
-          </div>
+          <iframe
+            id="browser-iframe"
+            src="https://circuit-shack.fly.dev?view=ario"
+            style="
+              transform: scale(0.8);
+              width: 125%;
+              height: 125%;
+              border: none;
+              transform-origin: top left;
+            "
+          ></iframe>
         </div>
       </div>
-    </div>
-
-    <!-- STEP 2: CUSTOMER LINKS (multi-phase) -->
-    <div class="step-content" id="step-2" style="display:none;">
-      <div class="browser">
-        <div class="browser-toolbar">
-          <div class="browser-dots"><span class="browser-dot r"></span><span class="browser-dot y"></span><span class="browser-dot g"></span></div>
-          <div class="browser-url">
-            <span class="browser-url-lock"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 7V5a3 3 0 116 0v2"/><rect x="3" y="7" width="10" height="7" rx="1.5"/></svg></span>
-            <span class="browser-url-text">connect.ariodata.com/circuitshack/amazon</span>
-          </div>
-        </div>
-        <div class="browser-body">
-          <div class="card" style="position:relative;" id="step2Card">
-
-            <!-- Phase A: Sign in -->
-            <div id="loginPhase" style="height:100%;display:flex;flex-direction:column;">
-              <div class="login-header">
-                <div class="amazon-mark">
-                  <svg viewBox="0 0 120 36" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <text x="0" y="26" font-family="'Outfit', sans-serif" font-weight="800" font-size="28" fill="#232F3E">amazon</text>
-                    <path d="M20 30 Q40 36 72 30" stroke="#FF9900" stroke-width="2.5" fill="none" stroke-linecap="round"/>
-                    <path d="M70 28 L72 30 L68 30" fill="#FF9900"/>
-                  </svg>
-                </div>
-                <div class="login-title">Sign in to Amazon</div>
-                <div class="login-desc">Enter your credentials to securely link your account.</div>
-              </div>
-              <div class="login-form">
-                <div class="field">
-                  <label>Email or phone number</label>
-                  <input type="text" placeholder="your@email.com" id="in-email">
-                </div>
-                <div class="field">
-                  <label>Password</label>
-                  <input type="password" placeholder="Your Amazon password" id="in-pass">
-                </div>
-                <button class="btn btn-dark" onclick="showOTP()">
-                  Sign in &amp; Connect
-                </button>
-              </div>
-              <div class="login-trust">
-                <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 7V5a3 3 0 116 0v2"/><rect x="3" y="7" width="10" height="7" rx="1.5"/><circle cx="8" cy="11" r="1"/></svg>
-                Powered by Ario. We never store your password.
-              </div>
-            </div>
-
-            <!-- Phase B: 2FA / OTP -->
-            <div id="otpPhase" style="display:none;height:100%;">
-              <div class="otp-bg">
-                <div class="otp-brand">
-                  <div class="store-icon" style="width:36px;height:36px;border-radius:8px;">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:18px;height:18px;"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
-                  </div>
-                  <span style="font-family:'Outfit',sans-serif;font-weight:800;font-size:20px;color:var(--ink);">circuit shack</span>
-                </div>
-                <div class="otp-card">
-                  <div class="otp-card-header">
-                    <span>Sign in to Amazon</span>
-                    <span class="otp-close">&times;</span>
-                  </div>
-                  <div class="otp-card-body">
-                    <div class="otp-title">Amazon Verification</div>
-                    <div class="otp-subtitle">Enter verification code</div>
-                    <div class="otp-text">For your security, we've sent the code to your phone ***-***-**91.</div>
-                    <div class="field" style="margin-bottom:16px;">
-                      <input type="text" placeholder="OTP" id="in-otp">
-                    </div>
-                    <button class="btn btn-dark" onclick="startConnect()">Submit code</button>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <!-- Phase C: Loading / Linking -->
-            <div id="linkingPhase" style="display:none;height:100%;">
-              <div class="linking-screen">
-                <div class="linking-title">Linking Your Account</div>
-                <div class="linking-desc">Please wait while we connect to Amazon and retrieve your information</div>
-                <div class="linking-logo">
-                  <img src="amazon-icon.webp" alt="Amazon" style="width:70px;height:70px;object-fit:contain;">
-                  <div class="linking-sparkles">
-                    <div class="sparkle" style="top:15%;left:30%;animation-delay:0s;"></div>
-                    <div class="sparkle" style="top:60%;right:25%;animation-delay:0.4s;"></div>
-                    <div class="sparkle" style="top:40%;right:15%;animation-delay:0.8s;"></div>
-                    <div class="sparkle" style="bottom:20%;left:25%;animation-delay:1.2s;"></div>
-                  </div>
-                </div>
-                <div class="linking-status" id="linkingStatus">Connecting to Amazon...</div>
-                <div class="linking-progress">
-                  <div class="linking-progress-fill" id="linkingFill"></div>
-                </div>
-                <div class="linking-steps">
-                  <div class="linking-step active" id="lk-1"><span class="linking-step-num">1</span><span>Connect</span></div>
-                  <div class="linking-step" id="lk-2"><span class="linking-step-num">2</span><span>Extract</span></div>
-                  <div class="linking-step" id="lk-3"><span class="linking-step-num">3</span><span>Load</span></div>
-                  <div class="linking-step" id="lk-4"><span class="linking-step-num">4</span><span>Complete</span></div>
-                </div>
-              </div>
-            </div>
-
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- STEP 3: CONNECTED -->
-    <div class="step-content" id="step-3" style="display:none;">
-      <div class="browser">
-        <div class="browser-toolbar">
-          <div class="browser-dots"><span class="browser-dot r"></span><span class="browser-dot y"></span><span class="browser-dot g"></span></div>
-          <div class="browser-url">
-            <span class="browser-url-lock"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 7V5a3 3 0 116 0v2"/><rect x="3" y="7" width="10" height="7" rx="1.5"/></svg></span>
-            <span class="browser-url-text">connect.ariodata.com/circuitshack/success</span>
-          </div>
-        </div>
-        <div class="browser-body">
-          <div class="card">
-            <div class="connected-body">
-              <div class="connected-check">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
-              </div>
-              <div class="connected-title">Thank you for linking your Amazon account!</div>
-              <div class="connected-confirm">
-                <div class="connected-confirm-label">Confirmation code</div>
-                <div class="connected-confirm-code">23E372</div>
-              </div>
-              <div class="connected-desc">We will email you your $25 coupon code within the next 24 hours. Keep an eye on your inbox!</div>
-              <button class="btn-blue" onclick="goToPhase(5)" style="position:absolute;bottom:20px;right:20px;display:inline-flex;align-items:center;gap:8px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;color:#fff;background:var(--blue);border:none;border-radius:8px;padding:10px 20px;cursor:pointer;transition:all 0.2s;">
-                See my data
-                <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" style="width:14px;height:14px;"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- STEP 4: DATA VIEW -->
-    <div id="step-4" style="display:none;width:100%;max-width:900px;">
-      <div class="browser">
-        <div class="browser-toolbar">
-          <div class="browser-dots"><span class="browser-dot r"></span><span class="browser-dot y"></span><span class="browser-dot g"></span></div>
-          <div class="browser-url">
-            <span class="browser-url-lock"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 7V5a3 3 0 116 0v2"/><rect x="3" y="7" width="10" height="7" rx="1.5"/></svg></span>
-            <span class="browser-url-text">dashboard.circuitshack.com/customers/insights</span>
-          </div>
-        </div>
-        <div class="browser-body" style="height:auto;max-height:520px;overflow-y:auto;padding:16px;">
-          <div class="data-header">
-            <div>
-              <div class="data-eyebrow">Ario Data View &middot; Customer #3151</div>
-              <div class="data-title">Electronics Purchase History</div>
-            </div>
-            <div class="data-meta">Amazon &middot; Last 12 months</div>
-          </div>
-          <div class="data-kpis">
-            <div class="kpi"><div class="kpi-val">$2,847</div><div class="kpi-lbl">Total Spend</div></div>
-            <div class="kpi"><div class="kpi-val">23</div><div class="kpi-lbl">Orders</div></div>
-            <div class="kpi"><div class="kpi-val">$124</div><div class="kpi-lbl">Avg Order</div></div>
-            <div class="kpi"><div class="kpi-val">7</div><div class="kpi-lbl">Categories</div></div>
-          </div>
-          <div class="data-table">
-            <div class="dt-head"><span>Product</span><span>Category</span><span>Price</span><span>Date</span></div>
-            <div class="dt-row"><span class="dt-product">Sony WH-1000XM5 Headphones</span><span><span class="dt-cat">Audio</span></span><span class="dt-price">$348.00</span><span class="dt-date">Feb 2026</span></div>
-            <div class="dt-row"><span class="dt-product">Apple iPad Air M2 (256GB)</span><span><span class="dt-cat">Tablets</span></span><span class="dt-price">$599.00</span><span class="dt-date">Jan 2026</span></div>
-            <div class="dt-row"><span class="dt-product">Anker 737 Power Bank</span><span><span class="dt-cat">Accessories</span></span><span class="dt-price">$109.99</span><span class="dt-date">Jan 2026</span></div>
-            <div class="dt-row"><span class="dt-product">LG C3 55" OLED TV</span><span><span class="dt-cat">TV &amp; Display</span></span><span class="dt-price">$1,096.99</span><span class="dt-date">Dec 2025</span></div>
-            <div class="dt-row"><span class="dt-product">Logitech MX Master 3S</span><span><span class="dt-cat">Peripherals</span></span><span class="dt-price">$99.99</span><span class="dt-date">Nov 2025</span></div>
-            <div class="dt-row"><span class="dt-product">Samsung T7 2TB SSD</span><span><span class="dt-cat">Storage</span></span><span class="dt-price">$149.99</span><span class="dt-date">Oct 2025</span></div>
-            <div class="dt-row"><span class="dt-product">Google Nest Hub Max</span><span><span class="dt-cat">Smart Home</span></span><span class="dt-price">$229.99</span><span class="dt-date">Sep 2025</span></div>
-          </div>
-          <div class="insight-bar">
-            <div class="insight-icon">
-              <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M8 2v1M8 13v1M2 8h1M13 8h1M4.2 4.2l.7.7M11.1 11.1l.7.7M4.2 11.8l.7-.7M11.1 4.9l.7-.7"/><circle cx="8" cy="8" r="3"/></svg>
-            </div>
-            <div>
-              <strong>Ario Insight:</strong> This customer over-indexes on premium audio and display — 51% of spend in two categories. High likelihood to convert on home theater bundles.
-            </div>
-          </div>
-        </div>
+      <div class="sim-link-wrap" id="simLinkWrap" style="display:none;">
+        <a href="https://simulation.ariodata.com/" target="_blank" class="sim-link">
+          Or, see how it works with an example&nbsp;→
+        </a>
       </div>
     </div>
 
@@ -1591,10 +1425,11 @@
 // Logical flow:
 //   phase 0 = intro overlay
 //   phase 1 = narrative (stage-setter) — full-width, email anim loops
-//   phase 2 = step 1 (present the offer) — split, interactive
-//   phase 3 = step 2 (customer links) — split, interactive
-//   phase 4 = step 3 (connected) — split, NOT interactive
-//   phase 5 = step 4 (data view) — narrative, NOT interactive
+//   phase 2 = narrative (consent explainer) — full-width, email anim loops
+//   phase 3 = step 1 (present the offer) — split, interactive
+//   phase 4 = step 2 (customer links) — split, interactive
+//   phase 5 = step 3 (connected) — split, NOT interactive
+//   phase 6 = step 4 (data view) — narrative, NOT interactive
 
 var currentPhase = 0;
 var emailAnimTimer = null;
@@ -1602,17 +1437,41 @@ var nudgeTimer = null;
 
 var phases = {
   0: { screen: null, interactive: false },
-  1: { screen: 'screen-narrative', interactive: false, step: null },
-  2: { screen: 'screen-split', step: 1, interactive: true,
+  1: {
+    screen: 'screen-narrative',
+    interactive: false,
+    step: null,
+    narrativeEyebrow: 'The scenario',
+    narrativeTitle: 'Setting the stage',
+    narrativeVisual: 'image',
+    narrativeBullets: [
+      'Circuit Shack is a fictitious consumer electronics company',
+      'Amazon is its #1 competitor',
+      'The company wants to know what purchases their customers have made on Amazon'
+    ]
+  },
+  2: {
+    screen: 'screen-narrative',
+    interactive: false,
+    step: null,
+    narrativeEyebrow: 'The scenario',
+    narrativeTitle: 'Setting the stage',
+    narrativeVisual: 'browser',
+    narrativeBullets: [
+      'Circuit Shack sends a promotional email offering $25 store credit for sharing electronics purchases from Amazon over the past year',
+      'Customer clicks through and accepts the offer'
+    ]
+  },
+  3: { screen: 'screen-split', step: 1, interactive: true,
        eyebrow: 'Value exchange', title: 'Accept the <em>Offer</em>',
        desc: 'The retailer presents a value exchange — store credit, VIP access, or personalized deals — in return for a quick data connection.' },
-  3: { screen: 'screen-split', step: 2, interactive: true,
+  4: { screen: 'screen-split', step: 2, interactive: true,
        eyebrow: 'Secure authentication', title: 'Customer <em>Links</em>',
        desc: 'The customer signs in to Amazon. Ario handles the secure connection, 2FA, and data retrieval behind the scenes.' },
-  4: { screen: 'screen-split', step: 3, interactive: true,
+  5: { screen: 'screen-split', step: 3, interactive: false,
        eyebrow: 'Confirmation', title: '<em>Connected</em>',
        desc: 'The account is linked. Verified purchase data begins streaming into your systems immediately.' },
-  5: { screen: 'screen-split', step: 4, interactive: false,
+  6: { screen: 'screen-split', step: 4, interactive: false,
        eyebrow: 'Actionable intelligence', title: 'Data <em>flows in</em>',
        desc: 'SKU-level transaction data, filtered by category, ready for your CRM, personalization engine, or analytics stack.' }
 };
@@ -1653,7 +1512,7 @@ function showScreen(id) {
 // GO TO PHASE
 // ═══════════════════════════════════════
 function goToPhase(n) {
-  if (n < 1 || n > 5) return;
+  if (n < 1 || n > 6) return;
   currentPhase = n;
   var cfg = phases[n];
 
@@ -1665,15 +1524,6 @@ function goToPhase(n) {
 
   // If split, show the right step content
   if (cfg.screen === 'screen-split' && cfg.step) {
-    [1, 2, 3, 4].forEach(function(s) {
-      var el = document.getElementById('step-' + s);
-      el.style.display = 'none';
-      el.style.animation = 'none';
-      el.classList.remove('spotlit');
-    });
-    var stepEl = document.getElementById('step-' + cfg.step);
-    stepEl.style.display = 'block';
-    stepEl.style.animation = '';
 
     // Update left panel
     document.getElementById('leftEyebrow').innerHTML = cfg.eyebrow;
@@ -1689,15 +1539,52 @@ function goToPhase(n) {
     });
   }
 
-  // Email animation
-  if (n === 1) {
+  // If narrative, update narrative copy for this phase
+  if (cfg.screen === 'screen-narrative') {
+    var narrativeEyebrow = document.getElementById('narrativeEyebrow');
+    var narrativeTitle = document.getElementById('narrativeTitle');
+    var narrativeBullet1 = document.getElementById('narrativeBullet1');
+    var narrativeBullet2 = document.getElementById('narrativeBullet2');
+    var narrativeBullet3 = document.getElementById('narrativeBullet3');
+    var narrativeImageWrap = document.getElementById('narrativeImageWrap');
+    var narrativeBrowserWrap = document.getElementById('narrativeBrowserWrap');
+    if (narrativeEyebrow && cfg.narrativeEyebrow) narrativeEyebrow.textContent = cfg.narrativeEyebrow;
+    if (narrativeTitle && cfg.narrativeTitle) narrativeTitle.textContent = cfg.narrativeTitle;
+    if (narrativeBullet1 && cfg.narrativeBullets && cfg.narrativeBullets[0]) narrativeBullet1.textContent = cfg.narrativeBullets[0];
+    if (narrativeBullet2 && cfg.narrativeBullets && cfg.narrativeBullets[1]) narrativeBullet2.textContent = cfg.narrativeBullets[1];
+    if (narrativeBullet3) {
+      if (cfg.narrativeBullets && cfg.narrativeBullets[2]) {
+        narrativeBullet3.textContent = cfg.narrativeBullets[2];
+        narrativeBullet3.style.display = '';
+      } else {
+        narrativeBullet3.textContent = '';
+        narrativeBullet3.style.display = 'none';
+      }
+    }
+    if (narrativeImageWrap && narrativeBrowserWrap) {
+      if (cfg.narrativeVisual === 'image') {
+        narrativeImageWrap.style.display = '';
+        narrativeBrowserWrap.style.display = 'none';
+      } else {
+        narrativeImageWrap.style.display = 'none';
+        narrativeBrowserWrap.style.display = '';
+      }
+    }
+  }
+
+  // Email animation only on narrative browser visual
+  if (cfg.screen === 'screen-narrative' && cfg.narrativeVisual === 'browser') {
     setTimeout(startEmailAnim, 400);
   } else {
     stopEmailAnim();
   }
 
-  // Confetti on connected (phase 4)
-  if (n === 4) {
+  // Show simulation link only on Customer Links step (phase 4)
+  var simLink = document.getElementById('simLinkWrap');
+  if (simLink) simLink.style.display = (n === 4) ? '' : 'none';
+
+  // Confetti on connected (phase 5)
+  if (n === 5) {
     fireConfetti();
     // Pulse the next button after confetti settles
     setTimeout(function() {
@@ -1714,7 +1601,7 @@ function goToPhase(n) {
   }
 
   // Nudge on narrative
-  if (n === 1) {
+  if (n === 1 || n === 2) {
     scheduleNudge();
   }
 
@@ -1723,8 +1610,8 @@ function goToPhase(n) {
 
 // Called from in-page buttons
 function goToStep(stepNum) {
-  // stepNum maps: 1->phase2, 2->phase3, 3->phase4
-  goToPhase(stepNum + 1);
+  // stepNum maps: 1->phase3, 2->phase4, 3->phase5
+  goToPhase(stepNum + 2);
 }
 
 // ═══════════════════════════════════════
@@ -1735,17 +1622,17 @@ function updateNavButtons() {
   var next = document.getElementById('navNext');
   var cfg = phases[currentPhase];
 
-  // Last page (phase 5): hide both buttons
-  if (currentPhase >= 5) {
+  // Last page (phase 6): hide both buttons
+  if (currentPhase >= 6) {
     prev.style.display = 'none';
     next.style.display = 'none';
     return;
   }
 
-  // Back: visible from phase 2+, disabled on phase 2 (can't go back to narrative)
+  // Back: visible from phase 2+
   if (currentPhase >= 2) {
     prev.style.display = '';
-    prev.disabled = (currentPhase <= 2);
+    prev.disabled = false;
   } else {
     prev.style.display = 'none';
   }
@@ -1763,8 +1650,10 @@ function updateNavButtons() {
   // Position: narrative-pos when not split
   if (cfg.screen !== 'screen-split') {
     next.classList.add('narrative-pos');
+    prev.classList.add('narrative-pos');
   } else {
     next.classList.remove('narrative-pos');
+    prev.classList.remove('narrative-pos');
   }
 }
 
@@ -1774,11 +1663,11 @@ function goNext() {
     showTutorial(currentPhase);
     return;
   }
-  if (currentPhase < 5) goToPhase(currentPhase + 1);
+  if (currentPhase < 6) goToPhase(currentPhase + 1);
 }
 
 function goPrev() {
-  if (currentPhase > 2) goToPhase(currentPhase - 1);
+  if (currentPhase > 1) goToPhase(currentPhase - 1);
 }
 
 // ═══════════════════════════════════════
@@ -1910,9 +1799,9 @@ function clearNudge() {
 // TUTORIAL SPOTLIGHT
 // ═══════════════════════════════════════
 var tutorialMessages = {
-  2: 'Select your region, then click <span>Connect</span>',
-  3: 'Enter your credentials, then click <span>Sign in & Connect</span>',
-  '3-otp': 'Enter the verification code, then click <span>Submit code</span>'
+  3: 'Select your region, then click <span>Connect</span>',
+  4: 'Enter your credentials, then click <span>Sign in & Connect</span>',
+  '4-otp': 'Enter the verification code, then click <span>Submit code</span>'
 };
 var tutorialTimer = null;
 
@@ -1920,15 +1809,15 @@ function showTutorial(phase) {
   hideTutorial();
   // Check if OTP phase is showing
   var otpEl = document.getElementById('otpPhase');
-  var isOTP = otpEl && otpEl.style.display !== 'none' && phase === 3;
-  var msg = isOTP ? tutorialMessages['3-otp'] : tutorialMessages[phase];
+  var isOTP = otpEl && otpEl.style.display !== 'none' && phase === 4;
+  var msg = isOTP ? tutorialMessages['4-otp'] : tutorialMessages[phase];
   if (!msg) return;
 
   var cfg = phases[phase];
   var dim = document.getElementById('tutorialDim');
   var prompt = document.getElementById('tutorialPrompt');
   var text = document.getElementById('tutorialText');
-  var stepEl = document.getElementById('step-' + cfg.step);
+  var stepEl = document.getElementById('step-1');
 
   text.innerHTML = msg;
 
@@ -1940,7 +1829,7 @@ function showTutorial(phase) {
     tutorialTimer = setTimeout(function() {
       hideTutorial();
     }, 3000);
-  }, 1500);
+  }, 500);
 }
 
 function hideTutorial() {
@@ -2031,12 +1920,12 @@ function startConnect() {
     }, p.delay);
   });
 
-  // Auto-advance to connected (phase 4)
+  // Auto-advance to connected (phase 5)
   setTimeout(function() {
     document.getElementById('loginPhase').style.display = '';
     document.getElementById('otpPhase').style.display = 'none';
     document.getElementById('linkingPhase').style.display = 'none';
-    goToPhase(4);
+    goToPhase(5);
   }, 6500);
 }
 
@@ -2079,6 +1968,19 @@ function fireConfetti() {
 // INIT
 // ═══════════════════════════════════════
 updateNavButtons();
+
+
+
+const iframe = document.getElementById('browser-iframe');
+
+window.addEventListener('message', (event) => {
+
+  if (event.data?.type === "CHANGE_STEP") {
+    // Ignore iframe-driven step changes until split flow begins.
+    if (currentPhase < 3) return;
+    goToStep(event.data.step);
+  }
+});
 </script>
 
 </body>
