@@ -273,6 +273,15 @@
       height: 580px;
     }
 
+    #browser-iframe {
+      transform: scale(0.8);
+      width: 125%;
+      height: 125%;
+      border: none;
+      transform-origin: top left;
+      display: block;
+    }
+
     .card {
       background: #fff;
       overflow: hidden;
@@ -1116,19 +1125,65 @@
       .screen-narrative .narrative-inner > div:last-child { flex: 1 1 auto !important; max-width: 100% !important; }
 
       /* split layout */
-      .screen-split.active { grid-template-columns: 1fr; }
+      .screen-split.active {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto minmax(min(65vh, 720px), 1fr);
+        min-height: calc(100vh - 48px);
+      }
       .split-left {
         position: static; height: auto; padding: 24px;
         border-right: none; border-bottom: 1px solid var(--rule-light);
       }
-      .split-right { min-height: auto; padding: 20px; }
-      .vnav { display: none; }
-
-      /* browser chrome — fluid height */
-      .browser-body { height: auto; min-height: 360px; max-height: 520px; }
+      .split-right {
+        flex-direction: column;
+        align-items: stretch;
+        justify-content: flex-start;
+        min-height: 0;
+        padding: 20px;
+        overflow-x: hidden;
+        overflow-y: visible;
+      }
 
       /* step content */
-      .step-content, .step-content.wide { max-width: 100%; }
+      .step-content {
+        display: flex;
+        flex-direction: column;
+        flex: 1;
+        min-height: 0;
+        margin-left: auto;
+        margin-right: auto;
+      }
+      .step-content,
+      .step-content.wide {
+        max-width: 100%;
+      }
+
+      /* browser chrome — no scale (scale + overflow:hidden clips layout box); flex fills remaining height */
+      .browser {
+        display: flex;
+        flex-direction: column;
+        flex: 1;
+        min-height: 0;
+      }
+      .browser-toolbar {
+        flex-shrink: 0;
+      }
+      .browser-body {
+        flex: 1;
+        min-height: 0;
+        height: auto;
+        display: flex;
+        flex-direction: column;
+      }
+      #browser-iframe {
+        flex: 1;
+        min-height: 0;
+        transform: none;
+        width: 100%;
+        height: 100%;
+      }
+
+      .vnav { display: none; }
       .link-page { height: auto; min-height: 360px; padding: 24px 20px 20px; }
       .otp-bg { height: auto; min-height: 360px; padding: 24px 16px; }
       .linking-screen { height: auto; min-height: 360px; padding: 24px 20px; }
@@ -1366,7 +1421,7 @@
   <div class="split-right">
 
     <!-- STEP 1: PRESENT THE OFFER -->
-    <div class="step-content" id="step-1" style="display:block;">
+    <div class="step-content" id="step-1">
       <div class="browser">
         <div class="browser-toolbar">
           <div class="browser-dots"><span class="browser-dot r"></span><span class="browser-dot y"></span><span class="browser-dot g"></span></div>
@@ -1379,13 +1434,6 @@
           <iframe
             id="browser-iframe"
             src="https://circuit-shack.fly.dev?view=ario"
-            style="
-              transform: scale(0.8);
-              width: 125%;
-              height: 125%;
-              border: none;
-              transform-origin: top left;
-            "
           ></iframe>
         </div>
       </div>
